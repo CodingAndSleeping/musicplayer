@@ -10,7 +10,7 @@
       <div class="info-wrap">
         <div class="singer-info">
           <div class="avatar-wrap" v-if="artistImg">
-            <img :src="`${artistImg}?param=200y200`" alt="图片"/>
+            <img :src="`${artistImg}?param=200y200`" alt="图片" />
           </div>
           <span class="name">{{ details.artistName }}</span>
         </div>
@@ -35,7 +35,10 @@
             v-for="hotComment in hotComments"
           >
             <div class="icon-wrap">
-              <img :src="`${hotComment.user.avatarUrl}?param=200y200`" alt="图片" />
+              <img
+                :src="`${hotComment.user.avatarUrl}?param=200y200`"
+                alt="图片"
+              />
             </div>
             <div class="content-wrap">
               <div class="content">
@@ -69,7 +72,10 @@
             v-for="comment in comments"
           >
             <div class="icon-wrap">
-              <img :src="`${comment.user.avatarUrl}?param=200y200`" alt="图片"/>
+              <img
+                :src="`${comment.user.avatarUrl}?param=200y200`"
+                alt="图片"
+              />
             </div>
             <div class="content-wrap">
               <div class="content">
@@ -113,11 +119,11 @@
                 <div class="iconfont icon-play"></div>
                 <div class="num">{{ mv.playCount }}</div>
               </div>
-              <span class="time">{{mv.duration | SongTime}}</span>
+              <span class="time">{{ mv.duration | SongTime }}</span>
             </div>
             <div class="info-wrap">
-              <div class="name">{{mv.name}}</div>
-              <div class="singer">{{mv.artists | authors}}</div>
+              <div class="name">{{ mv.name }}</div>
+              <div class="singer">{{ mv.artists | authors }}</div>
             </div>
           </div>
         </div>
@@ -173,30 +179,26 @@ export default {
       );
     },
 
-    toMv(id){
+    toMv(id) {
       this.$router.replace({
-        name:"mv",
-        params:{
-          id
-        }
-      })
+        name: "mv",
+        params: {
+          id,
+        },
+      });
     },
 
-    mvPlay(){
-
-        this.$bus.$emit("musicPause")
-      
-    }
+    mvPlay() {
+      this.$bus.$emit("musicPause");
+    },
   },
 
-
   created() {
-    this.$bus.$on("mvPause", ()=>{
-      if(this.$refs.vid && this.$refs.vid.paused == false){
-      this.$refs.vid.pause()
+    this.$bus.$on("mvPause", () => {
+      if (this.$refs.vid && this.$refs.vid.paused == false) {
+        this.$refs.vid.pause();
       }
-
-    })
+    });
 
     MyAxios({
       url: "/mv/detail",
@@ -204,30 +206,38 @@ export default {
       params: {
         mvid: this.id,
       },
-    }).then(
-      (res) => {
-        // console.log(res.data);
-        this.details = res.data.data;
-
-        MyAxios({
-          url: "/artist/detail",
-          method: "get",
-          params: {
-            id: this.details.artistId,
-          },
-        }).then(
-          (res) => {
-            this.artistImg = res.data.data.artist.cover;
-          },
-          (error) => {
-            console.log(error.message);
-          }
-        );
-      },
-      (error) => {
-        console.log(error.message);
-      }
-    );
+    })
+      .then(
+        (res) => {
+          // console.log(res.data);
+          this.details = res.data.data;
+          return this.details.artistId
+        },
+        (error) => {
+          console.log(error.message);
+        }
+      )
+      .then(
+        (res) => {
+          MyAxios({
+            url: "/artist/detail",
+            method: "get",
+            params: {
+              id: res,
+            },
+          }).then(
+            (res) => {
+              this.artistImg = res.data.data.artist.cover;
+            },
+            (error) => {
+              console.log(error.message);
+            }
+          );
+        },
+        (error) => {
+          console.log(error.message);
+        }
+      );
 
     MyAxios({
       url: "/mv/url",
@@ -280,10 +290,6 @@ export default {
       }
     );
   },
-
-
- 
-
 };
 </script>
 
