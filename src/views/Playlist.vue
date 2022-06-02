@@ -279,7 +279,6 @@ export default {
       },
     }).then(
       (res) => {
-        // console.log(res.data);
         this.songs = res.data.songs;
         // this.songIDs = res.data.songs.map((item) => item.id);
 
