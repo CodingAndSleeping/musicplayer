@@ -133,7 +133,7 @@ export default {
           // console.log(res.data.data);
           this.musicName = this.names[0];
           this.musicAuthor = this.authors[0];
-
+          console.log(res.data);
           this.urls = res.data.data;
           this.musicUrl = this.urls.filter((item) => {
             return item.id == this.ids[0];
